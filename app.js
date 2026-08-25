@@ -103,12 +103,7 @@ function updateRecentlyPlayed(){
   $("#recentlyPlayed").innerHTML = indexes.map(i => mediaCard(DATA.tracks[i], i)).join("");
   $$("#recentlyPlayed [data-track]").forEach(btn => btn.addEventListener("click", () => setTrack(Number(btn.dataset.track), true)));
 }
-function renderVideos(){
-  $("#videoGrid").innerHTML = DATA.videos.map(v => `<article class="video-card">
-    <div class="video-placeholder">▶</div>
-    <div class="media-card-body"><h3>${escapeHtml(v.title)}</h3><p>${v.duration} • Add your video URL in data.js</p></div>
-  </article>`).join("");
-}
+
 function renderMerch(){
   $("#merchGrid").innerHTML = DATA.merch.map(m => `<article class="merch-card">
     <div class="merch-art">${escapeHtml(m.art).replace(/\n/g,"<br>")}</div>
@@ -221,4 +216,4 @@ function escapeHtml(v=""){
   return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-renderMusic(); renderVideos(); renderMerch(); renderFeed(); setTrack(0);
+renderMusic(); renderMerch(); renderFeed(); setTrack(0);
