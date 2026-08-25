@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0b0f" />
+  <title>AFAB Nation Radio</title>
+  <meta name="description" content="AFAB Nation Radio — music, community, videos and merch." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" data-route="home" aria-label="AFAB Nation home">
+        <img class="brand-logo" src="assets/afab-logo.png" alt="AFAB — A Female Assigned at Birth" />
+        <span class="brand-tagline">Women. Real. Together.</span>
+      </a>
+
+      <button class="new-post-btn" id="sidebarNewPost" type="button">＋ New Post</button>
+
+      <nav class="side-nav" aria-label="Primary navigation">
+        <button class="nav-link active" data-route="home"><span>⌂</span> Home</button>
+        <button class="nav-link" data-route="explore"><span>⌕</span> Explore</button>
+        <button class="nav-link" data-route="radio"><span>◉</span> Radio</button>
+        <button class="nav-link" data-route="music"><span>♫</span> Music</button>
+        <button class="nav-link" data-route="videos"><span>▣</span> Videos</button>
+        <button class="nav-link" data-route="merch"><span>♜</span> Merch</button>
+        <button class="nav-link" data-route="community"><span>♧</span> Community</button>
+      </nav>
+
+      <div class="terf-card">
+        <strong>TERF =</strong>
+        <span>Totally Excellent<br>Real Female</span>
+        <b>XX</b>
+      </div>
+
+      <div class="side-smallprint">
+        <p>AFAB Nation Radio</p>
+        <p>Independent music + community</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="mobile-brand">
+          <img src="assets/afab-logo.png" alt="AFAB Nation" />
+        </div>
+        <nav class="desktop-tabs" aria-label="Section tabs">
+          <button class="top-link active" data-route="home">Home</button>
+          <button class="top-link" data-route="radio">Radio</button>
+          <button class="top-link" data-route="videos">Videos</button>
+          <button class="top-link" data-route="music">Music</button>
+          <button class="top-link" data-route="merch">Merch</button>
+          <button class="top-link" data-route="community">Community</button>
+        </nav>
+        <label class="search-box">
+          <span>⌕</span>
+          <input id="searchInput" type="search" placeholder="Search AFAB Nation..." />
+        </label>
+      </header>
+
+      <section class="page active" id="page-home">
+        <div class="content-grid">
+          <div class="feed-column">
+            <section class="composer-card" id="composer">
+              <div class="composer-head">
+                <div class="avatar avatar-mari">M</div>
+                <textarea id="postText" rows="2" placeholder="What's on your mind?"></textarea>
+              </div>
+              <div class="composer-actions">
+                <label class="upload-action">
+                  <span>Aa</span> Text
+                </label>
+                <label class="upload-action">
+                  <span>▧</span> Photo
+                  <input id="imageUpload" type="file" accept="image/*" hidden />
+                </label>
+                <label class="upload-action">
+                  <span>♫</span> Audio
+                  <input id="audioUpload" type="file" accept="audio/*,.mp3" hidden />
+                </label>
+                <button class="upload-action" id="musicPostBtn" type="button"><span>≋</span> Music</button>
+                <button class="publish-btn" id="publishPost" type="button">Post</button>
+              </div>
+              <div class="upload-preview" id="uploadPreview" hidden></div>
+            </section>
+
+            <section id="feed" class="feed"></section>
+          </div>
+
+          <aside class="right-rail">
+            <section class="rail-card welcome-card">
+              <h2>Welcome back, Mari!</h2>
+              <div class="profile-summary">
+                <div class="avatar avatar-large avatar-mari">M</div>
+                <div><strong id="postCount">0</strong><span>Posts</span></div>
+                <div><strong>0</strong><span>Followers</span></div>
+                <div><strong>0</strong><span>Following</span></div>
+              </div>
+              <button class="pink-outline" data-route="community">View Community</button>
+            </section>
+
+            <section class="rail-card">
+              <div class="rail-heading"><h2>🔥 Trending Now</h2><button data-route="explore">See all</button></div>
+              <div class="trend"><span>#AFAB</span><small>Music + conversation</small></div>
+              <div class="trend"><span>#WomenOnly</span><small>Community</small></div>
+              <div class="trend"><span>#Sisterhood</span><small>Stories</small></div>
+              <div class="trend"><span>#AFABNationRadio</span><small>Now playing</small></div>
+            </section>
+
+            <section class="rail-card sponsor-card">
+              <span class="sponsor-kicker">AFAB NATION RADIO IS SUPPORTED BY</span>
+              <h3 id="sponsorName">Phoenix Securitas Tech</h3>
+              <p id="sponsorText">Your ad could be here.</p>
+              <button id="nextSponsor">Rotate Sponsor</button>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section class="page" id="page-radio">
+        <div class="radio-hero">
+          <img class="radio-hero-logo" src="assets/afab-logo.png" alt="AFAB — A Female Assigned at Birth" />
+          <p class="eyebrow">AFAB NATION</p>
+          <h1>RADIO</h1>
+          <p class="radio-tagline">WOMEN. MUSIC. NO APOLOGIES.</p>
+          <div class="radio-now-card">
+            <div class="cover big-cover" id="radioCover">AFAB</div>
+            <div class="radio-copy">
+              <span class="live-dot">● ON AIR</span>
+              <h2 id="radioTitle">I Am AFAB, Hear Me Roar</h2>
+              <p id="radioArtist">Mari Cruz</p>
+              <div class="radio-controls">
+                <button id="radioPrev" aria-label="Previous song">⏮</button>
+                <button id="radioPlay" class="radio-main-play" aria-label="Play">▶</button>
+                <button id="radioNext" aria-label="Next song">⏭</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <section class="section-block">
+          <div class="section-title"><h2>Recently Played</h2><span>AFAB Nation Radio</span></div>
+          <div class="cards-grid" id="recentlyPlayed"></div>
+        </section>
+
+        <section class="section-block">
+          <div class="section-title"><h2>Programming</h2></div>
+          <div class="program-grid">
+            <article><span>7 AM</span><h3>Morning Roar</h3><p>Start loud.</p></article>
+            <article><span>12 PM</span><h3>AFAB Anthems</h3><p>Music made for the station.</p></article>
+            <article><span>6 PM</span><h3>Totally Excellent Radio</h3><p>Conversation + tracks.</p></article>
+            <article><span>10 PM</span><h3>XX After Dark</h3><p>Late-night playlist.</p></article>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="page-music">
+        <section class="section-block flush-top">
+          <div class="section-title">
+            <div><p class="eyebrow">AFAB NATION</p><h1>Music</h1></div>
+            <span>Your original audio catalog</span>
+          </div>
+          <div class="cards-grid music-grid" id="musicGrid"></div>
+        </section>
+      </section>
+
+      <section class="page" id="page-videos">
+        <section class="section-block flush-top">
+          <div class="section-title">
+            <div><p class="eyebrow">WATCH</p><h1>Videos</h1></div>
+            <span>Music videos, commentary and shows</span>
+          </div>
+          <div class="video-grid" id="videoGrid"></div>
+        </section>
+      </section>
+
+      <section class="page" id="page-merch">
+        <section class="section-block flush-top">
+          <div class="section-title">
+            <div><p class="eyebrow">WEAR IT LOUD</p><h1>Merch</h1></div>
+            <span>Bootstrap shop placeholders</span>
+          </div>
+          <div class="merch-grid" id="merchGrid"></div>
+        </section>
+      </section>
+
+      <section class="page" id="page-community">
+        <section class="section-block flush-top">
+          <div class="section-title">
+            <div><p class="eyebrow">REAL WOMEN. REAL VOICES.</p><h1>Community</h1></div>
+            <span>Posts and discussion</span>
+          </div>
+          <div class="community-panel">
+            <h2>Community comes next.</h2>
+            <p>This bootstrap build already supports local posts, likes and comments in your browser. When you are ready, this tab can connect to Cloudflare D1 for real accounts and shared posts.</p>
+            <button class="primary-cta" data-route="home">Open Feed</button>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="page-explore">
+        <section class="section-block flush-top">
+          <div class="section-title"><div><p class="eyebrow">DISCOVER</p><h1>Explore</h1></div></div>
+          <div class="explore-tags">
+            <button>#AFAB</button><button>#WomenOnly</button><button>#Sisterhood</button>
+            <button>#AFABNationRadio</button><button>#Music</button><button>#Merch</button>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="radio-dock" id="radioDock">
+    <div class="dock-live">
+      <span class="live-dot">● LIVE</span>
+      <strong>AFAB NATION RADIO</strong>
+    </div>
+    <div class="dock-track">
+      <div class="cover mini-cover" id="dockCover">AFAB</div>
+      <div>
+        <strong id="dockTitle">I Am AFAB, Hear Me Roar</strong>
+        <span id="dockArtist">Mari Cruz</span>
+      </div>
+    </div>
+    <div class="dock-controls">
+      <button id="dockPrev">⏮</button>
+      <button id="dockPlay" class="dock-play">▶</button>
+      <button id="dockNext">⏭</button>
+    </div>
+    <div class="dock-progress-wrap">
+      <span id="currentTime">0:00</span>
+      <input id="seekBar" type="range" min="0" max="100" value="0" aria-label="Audio progress" />
+      <span id="duration">0:00</span>
+    </div>
+    <button class="dock-open-radio" data-route="radio">Open Radio</button>
+  </div>
+
+  <audio id="radioAudio" preload="metadata"></audio>
+
+  <template id="postTemplate">
+    <article class="post-card">
+      <div class="post-head">
+        <div class="avatar">A</div>
+        <div class="post-user"><strong></strong><span></span></div>
+        <button class="post-menu">•••</button>
+      </div>
+      <p class="post-copy"></p>
+      <div class="post-media"></div>
+      <div class="post-actions">
+        <button class="like-btn">♥ <span>0</span></button>
+        <button class="comment-toggle">○ <span>0</span></button>
+        <button>↻</button>
+        <button class="save-btn">♡</button>
+      </div>
+      <div class="comments" hidden>
+        <div class="comment-list"></div>
+        <div class="comment-compose">
+          <input type="text" placeholder="Write a comment..." />
+          <button type="button">Post</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
