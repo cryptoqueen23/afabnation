@@ -1,39 +1,30 @@
 window.AFAB_DATA = {
   tracks: [
-    {
-      id: "roar",
-      title: "I Am AFAB, Hear Me Roar",
-      artist: "Mari Cruz",
-      coverText: "HEAR\nME ROAR",
-      src: "audio/i-am-afab-hear-me-roar.mp3"
-    },
-    {
-      id: "real-females",
-      title: "Real Females Don't Disappear",
-      artist: "Mari Cruz",
-      coverText: "REAL\nFEMALES",
-      src: "audio/real-females-dont-disappear.mp3"
-    },
-    {
-      id: "xx",
-      title: "XX Not a Feeling",
-      artist: "Mari Cruz",
-      coverText: "XX",
-      src: "audio/xx-not-a-feeling.mp3"
-    },
-    {
-      id: "clam",
-      title: "Clams Not Pronouns",
-      artist: "Mari Cruz",
-      coverText: "CLAMS",
-      src: "audio/clams-not-pronouns.mp3"
-    }
-  ],
-  videos: [
-    { title: "I Am AFAB — Official Music Video", duration: "4:01" },
-    { title: "Why Sex Matters", duration: "6:23" },
-    { title: "Let's Talk Women's Spaces", duration: "8:11" }
-  ],
+      {
+            "id": "clams-not-pronouns",
+            "title": "Clams Not Pronouns",
+            "artist": "Mari Cruz",
+            "coverText": "CLAMS",
+            "src": "audio/clams-not-pronouns.mp3",
+            "duration": "4:43"
+      },
+      {
+            "id": "xx-is-not-a-feeling",
+            "title": "XX Is Not a Feeling!",
+            "artist": "Mari Cruz",
+            "coverText": "XX",
+            "src": "audio/xx-is-not-a-feeling.mp3",
+            "duration": "4:00"
+      },
+      {
+            "id": "real-females-dont-disappear",
+            "title": "Real Females Don't Disappear",
+            "artist": "Mari Cruz",
+            "coverText": "REAL\nFEMALES",
+            "src": "audio/real-females-dont-disappear.mp3",
+            "duration": "2:04"
+      }
+],
   merch: [
     { name: "Totally Excellent Real Female Tee", price: "$24.99", art: "TERF =\nTOTALLY EXCELLENT\nREAL FEMALE" },
     { name: "AFAB Nation Hoodie", price: "$44.99", art: "AFAB\nNATION" },
@@ -59,11 +50,11 @@ window.AFAB_DATA = {
     {
       id: "starter-2",
       user: "MariCruz",
-      time: "4h ago",
-      text: "New song just dropped. AFAB Nation Radio is on.",
+      time: "now",
+      text: "AFAB Nation Radio is on. Three songs are loaded and ready.",
       type: "track",
-      trackId: "roar",
-      likes: 235,
+      trackId: "clams-not-pronouns",
+      likes: 0,
       comments: []
     }
   ]

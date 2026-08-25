@@ -1,56 +1,36 @@
-# AFAB Nation Radio — Bootstrap Starter
+# AFAB Nation
 
-This is a static starter for:
+Bootstrap build with the official AFAB logo and your actual MP3 songs.
 
-- Social-style home feed
-- Text posts
-- Local image/audio posts
-- Likes + comments stored in the visitor's browser
+## Included songs
+
+- Clams Not Pronouns (4:43)
+- XX Is Not a Feeling! (4:00)
+- Real Females Don't Disappear (2:04)
+
+## Included
+
+- AFAB Nation social-style homepage
 - Persistent AFAB Nation Radio player
-- Music library
-- Video placeholders
-- Merch placeholders
-- Rotating sponsor/flywheel ad block
-- Responsive mobile layout
+- Music tab
+- Merch tab
+- Community tab
+- Local text/photo/audio posting prototype
+- Likes and comments stored in the browser
+- Rotating sponsor block
+- Responsive layout
+- Official AFAB logo
 
-## Run it
+## Removed
 
-Open the folder in VS Code.
+The Videos section has been removed from this build.
 
-For best results, use VS Code Live Server or another tiny local server.
+## Next backend step
 
-## Add your MP3 files
+For a real shared community:
 
-Create/use the `audio` folder and rename your files to match `data.js`, or edit the `src` values in `data.js`.
+- Cloudflare D1 for accounts/posts/comments/likes
+- Cloudflare R2 for MP3s and images
+- Cloudflare Worker API for posting/auth/moderation
 
-Example:
-
-audio/i-am-afab-hear-me-roar.mp3
-
-MP3 at 192 kbps is a strong web default.
-
-## Edit songs
-
-Open `data.js` and change the `tracks` array.
-
-## Important bootstrap limitation
-
-Posts, comments, likes, and uploads are currently stored only in the current browser with localStorage. That is intentional for the front-end bootstrap.
-
-Large photos/audio can exceed browser localStorage. For real users, the next backend step should be:
-
-- Cloudflare D1: accounts, posts, comments, likes, metadata
-- Cloudflare R2: images + MP3/audio files
-- External embeds or R2/Stream for video
-- Cloudflare Worker API: auth + posting + moderation
-
-D1 should not store the MP3 bytes themselves.
-
-## Sponsor flywheel
-
-Edit the `sponsors` array in `data.js`. The sponsor block rotates every 12 seconds.
-
-
-## Logo
-
-Official AFAB logo is included at `assets/afab-logo.png` and used in the sidebar, mobile header, and Radio page.
+The current community posting is intentionally local-only while the bootstrap front end is being built.
