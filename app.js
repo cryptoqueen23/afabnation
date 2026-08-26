@@ -27,7 +27,23 @@ function routeTo(route){
       btn.classList.toggle("active", btn.dataset.route === route);
     }
   });
+  if(route === "donate") renderDonateButton();
   window.scrollTo({top:0, behavior:"smooth"});
+}
+
+let donateButtonRendered = false;
+function renderDonateButton(attempt = 0){
+  if(donateButtonRendered) return;
+  const container = $("#paypal-container-YBL6KUSSYPHHW");
+  if(!container) return;
+  if(window.paypal && window.paypal.HostedButtons){
+    donateButtonRendered = true;
+    window.paypal.HostedButtons({ hostedButtonId: "YBL6KUSSYPHHW" }).render("#paypal-container-YBL6KUSSYPHHW");
+  } else if(attempt < 20){
+    setTimeout(() => renderDonateButton(attempt + 1), 250);
+  } else {
+    container.innerHTML = '<p class="donate-fallback-text">Having trouble loading the donate button? <a class="donate-fallback-link" href="https://www.paypal.com/ncp/payment/YBL6KUSSYPHHW">Donate via PayPal</a></p>';
+  }
 }
 
 $$("[data-route]").forEach(btn => btn.addEventListener("click", e => {
