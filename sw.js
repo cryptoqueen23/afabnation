@@ -1,8 +1,9 @@
-const VERSION = "afab-nation-v1";
+const VERSION = "afab-nation-v2";
 const SHELL_CACHE = `${VERSION}-shell`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 
-const SHELL_ASSETS = [
+// Precached at install so the app has an offline-capable shell immediately.
+const PRECACHE_ASSETS = [
   "./",
   "./index.html",
   "./style.css",
@@ -15,10 +16,16 @@ const SHELL_ASSETS = [
   "./assets/icons/apple-touch-icon.png"
 ];
 
+// These change every time the site is updated (new songs, new code) — always
+// prefer the network so a fresh deploy shows up immediately, and only fall
+// back to the cache when offline. Cache-first here was the v1 bug: a track
+// added to data.js after a browser had already cached it would never show up.
+const NETWORK_FIRST_PATHS = ["/", "/index.html", "/app.js", "/style.css", "/data.js"];
+
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(SHELL_CACHE)
-      .then(cache => cache.addAll(SHELL_ASSETS))
+      .then(cache => cache.addAll(PRECACHE_ASSETS))
       .then(() => self.skipWaiting())
   );
 });
@@ -44,13 +51,8 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  if (req.mode === "navigate") {
-    event.respondWith(networkFirstShell(req));
-    return;
-  }
-
-  if (SHELL_ASSETS.includes(`.${url.pathname}`) || url.pathname === "/") {
-    event.respondWith(cacheFirst(req));
+  if (req.mode === "navigate" || NETWORK_FIRST_PATHS.includes(url.pathname)) {
+    event.respondWith(networkFirst(req));
     return;
   }
 
@@ -84,13 +86,14 @@ async function staleWhileRevalidate(req){
   return cached || fetchPromise;
 }
 
-async function networkFirstShell(req){
+async function networkFirst(req){
+  const cacheKey = req.mode === "navigate" ? "./index.html" : req;
   try {
     const res = await fetch(req);
-    if (res.ok) (await caches.open(SHELL_CACHE)).put("./index.html", res.clone());
+    if (res.ok) (await caches.open(SHELL_CACHE)).put(cacheKey, res.clone());
     return res;
   } catch (err) {
-    const cached = await caches.match("./index.html");
+    const cached = await caches.match(cacheKey);
     return cached || Response.error();
   }
 }
