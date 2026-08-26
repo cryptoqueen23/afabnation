@@ -1,4 +1,4 @@
-const VERSION = "afab-nation-v2";
+const VERSION = "afab-nation-v3";
 const SHELL_CACHE = `${VERSION}-shell`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 
@@ -9,6 +9,7 @@ const PRECACHE_ASSETS = [
   "./style.css",
   "./app.js",
   "./data.js",
+  "./catalog.js",
   "./manifest.webmanifest",
   "./assets/afab-logo.png",
   "./assets/icons/icon-192.png",
@@ -19,8 +20,10 @@ const PRECACHE_ASSETS = [
 // These change every time the site is updated (new songs, new code) — always
 // prefer the network so a fresh deploy shows up immediately, and only fall
 // back to the cache when offline. Cache-first here was the v1 bug: a track
-// added to data.js after a browser had already cached it would never show up.
-const NETWORK_FIRST_PATHS = ["/", "/index.html", "/app.js", "/style.css", "/data.js"];
+// added to the catalog after a browser had already cached it would never
+// show up. catalog.js carries the same risk as data.js did, so it gets the
+// same treatment.
+const NETWORK_FIRST_PATHS = ["/", "/index.html", "/app.js", "/style.css", "/data.js", "/catalog.js"];
 
 self.addEventListener("install", event => {
   event.waitUntil(

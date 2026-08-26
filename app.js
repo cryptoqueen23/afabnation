@@ -1,7 +1,12 @@
 const DATA = window.AFAB_DATA;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
-const PLAYABLE = DATA.tracks.filter(t => t.src);
+
+// Catalog is generic and content-blind: any record with a title that isn't
+// explicitly unpublished renders. No per-song logic lives here.
+const RAW_CATALOG = window.AFAB_CATALOG || [];
+const CATALOG = RAW_CATALOG.filter(t => t && t.title && t.published !== false);
+const PLAYABLE = CATALOG.filter(t => t.audio);
 
 const state = {
   currentTrack: 0,
@@ -112,16 +117,29 @@ function getTrack(){
   return PLAYABLE[state.currentTrack];
 }
 
+function coverMarkup(track, multiline){
+  if(track.cover){
+    return `<img src="${escapeHtml(track.cover)}" alt="${escapeHtml(track.title)} cover art" loading="lazy" />`;
+  }
+  const text = escapeHtml(track.coverText || "");
+  return multiline ? text.replace(/\n/g,"<br>") : text.replace(/\n/g," ");
+}
+
+function setCoverEl(el, track){
+  el.classList.toggle("has-image", !!track.cover);
+  el.innerHTML = coverMarkup(track, false);
+}
+
 function setTrack(index, autoplay=false){
   state.currentTrack = (index + PLAYABLE.length) % PLAYABLE.length;
   const t = getTrack();
-  audio.src = t.src;
+  audio.src = t.audio;
   $("#radioTitle").textContent = t.title;
   $("#radioArtist").textContent = t.artist;
   $("#dockTitle").textContent = t.title;
   $("#dockArtist").textContent = t.artist;
-  $("#radioCover").textContent = t.coverText;
-  $("#dockCover").textContent = t.coverText.replace(/\n/g," ");
+  setCoverEl($("#radioCover"), t);
+  setCoverEl($("#dockCover"), t);
   updateRecentlyPlayed();
   updateRadioTranscript(t);
   if(autoplay){
@@ -184,16 +202,34 @@ function updateRadioTranscript(track){
   wireTranscriptToggles(container);
 }
 
+function trackBadges(track){
+  const badges = [];
+  if(track.featured) badges.push(`<span class="track-badge featured"><span aria-hidden="true">★</span> Featured</span>`);
+  if(track.explicit) badges.push(`<span class="track-badge explicit">Explicit</span>`);
+  return badges.length ? `<div class="track-badges">${badges.join("")}</div>` : "";
+}
+
+function trackMeta(track){
+  const genre = Array.isArray(track.genre) ? track.genre.filter(Boolean).join(" / ") : "";
+  const yearMatch = typeof track.releaseDate === "string" && track.releaseDate.match(/\d{4}/);
+  const year = yearMatch ? yearMatch[0] : "";
+  const bits = [genre, year].filter(Boolean);
+  return bits.length ? `<p class="track-meta">${escapeHtml(bits.join(" · "))}</p>` : "";
+}
+
 function mediaCard(track){
   const playableIndex = PLAYABLE.findIndex(t => t.id === track.id);
   const playControl = playableIndex > -1
     ? `<button data-track="${playableIndex}">▶ Play</button>`
     : `<button disabled aria-label="Audio coming soon">Audio coming soon</button>`;
   return `<article class="media-card">
-    <div class="cover">${track.coverText.replace(/\n/g,"<br>")}</div>
+    <div class="cover${track.cover ? " has-image" : ""}">${coverMarkup(track, true)}</div>
     <div class="media-card-body">
+      ${trackBadges(track)}
       <h3>${escapeHtml(track.title)}</h3>
       <p>${escapeHtml(track.artist)}</p>
+      ${trackMeta(track)}
+      ${track.description ? `<p class="track-description">${escapeHtml(track.description)}</p>` : ""}
       ${playControl}
       <div class="track-transcript">${transcriptControl(track)}</div>
     </div>
@@ -201,7 +237,7 @@ function mediaCard(track){
 }
 
 function renderMusic(){
-  $("#musicGrid").innerHTML = DATA.tracks.map(mediaCard).join("");
+  $("#musicGrid").innerHTML = CATALOG.map(mediaCard).join("");
   $$("#musicGrid [data-track]").forEach(btn => btn.addEventListener("click", () => {
     setTrack(Number(btn.dataset.track), true); routeTo("radio");
   }));
@@ -316,7 +352,7 @@ function buildPost(post){
     }
   }else if(type === "track" && post.trackId){
     const idx = PLAYABLE.findIndex(t => t.id === post.trackId);
-    const t = DATA.tracks.find(t => t.id === post.trackId) || PLAYABLE[0];
+    const t = CATALOG.find(t => t.id === post.trackId) || PLAYABLE[0];
     media.innerHTML = `<div class="media-card" style="margin-top:8px"><div class="media-card-body"><h3>${escapeHtml(t.title)}</h3><p>${escapeHtml(t.artist)}</p><button class="inline-track-play">▶ Play on AFAB Nation Radio</button></div></div>`;
     $(".inline-track-play",media).addEventListener("click", () => setTrack(idx < 0 ? 0 : idx, true));
   }
