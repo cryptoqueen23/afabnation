@@ -35,6 +35,7 @@ window.AFAB_DATA = {
             "title": "Keep Your Male Privilege Out of Women's Spaces",
             "artist": "Mari Cruz",
             "coverText": "KEEP\nOUT",
+            "src": "audio/keep-your-male-privilege-out-of-womens-spaces.mp3",
             "transcript": "",
             "transcriptStatus": "pending"
       },
@@ -43,6 +44,7 @@ window.AFAB_DATA = {
             "title": "1st Edition",
             "artist": "Mari Cruz",
             "coverText": "1ST\nEDITION",
+            "src": "audio/1st-edition.mp3",
             "transcript": "",
             "transcriptStatus": "pending"
       },
@@ -51,12 +53,22 @@ window.AFAB_DATA = {
             "title": "Wrong Door, Amigo",
             "artist": "Mari Cruz",
             "coverText": "WRONG\nDOOR",
+            "src": "audio/wrong-door-amigo.mp3",
+            "transcript": "",
+            "transcriptStatus": "pending"
+      },
+      {
+            "id": "define-it-or-draft-em",
+            "title": "Define It or Draft 'Em",
+            "artist": "Mari Cruz",
+            "coverText": "DEFINE\nIT",
+            "src": "audio/define-it-or-draft-em.mp3",
             "transcript": "",
             "transcriptStatus": "pending"
       }
 ],
   merch: [
-    { name: "Totally Excellent Real Female Tee", price: "$24.99", art: "TERF =\nTOTALLY EXCELLENT\nREAL FEMALE" },
+    { name: "Totally Excellent Real Female Tee", price: "$24.99", art: "TERF =\nTRANS-EXCLUSIONARY\nRADICAL FEMINIST" },
     { name: "AFAB Nation Hoodie", price: "$44.99", art: "AFAB\nNATION" },
     { name: "XX Mug", price: "$16.99", art: "XX" },
     { name: "AFAB Nation Hat", price: "$22.99", art: "AFAB" }
