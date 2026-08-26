@@ -65,6 +65,24 @@ window.AFAB_DATA = {
             "src": "audio/define-it-or-draft-em.mp3",
             "transcript": "",
             "transcriptStatus": "pending"
+      },
+      {
+            "id": "afab-nation",
+            "title": "AFAB Nation",
+            "artist": "Mari Cruz",
+            "coverText": "AFAB\nNATION",
+            "src": "audio/afab-nation.mp3",
+            "transcript": "",
+            "transcriptStatus": "pending"
+      },
+      {
+            "id": "afab-nation-espanol",
+            "title": "AFAB Nation (Español)",
+            "artist": "Mari Cruz",
+            "coverText": "AFAB\nNATION",
+            "src": "audio/afab-nation-espanol.mp3",
+            "transcript": "",
+            "transcriptStatus": "pending"
       }
 ],
   merch: [
