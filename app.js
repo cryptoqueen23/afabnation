@@ -27,7 +27,80 @@ function routeTo(route){
 $$("[data-route]").forEach(btn => btn.addEventListener("click", e => {
   e.preventDefault();
   routeTo(btn.dataset.route);
+  if(mobileQuery.matches) closeMobileMenu(false);
 }));
+
+const sidebar = $("#sidebar");
+const menuToggle = $("#menuToggle");
+const navBackdrop = $("#navBackdrop");
+const mobileQuery = window.matchMedia("(max-width: 780px)");
+const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+
+function syncSidebarForViewport(){
+  if(mobileQuery.matches){
+    if(!sidebar.classList.contains("open")){
+      sidebar.setAttribute("aria-hidden", "true");
+      sidebar.inert = true;
+    }
+  }else{
+    sidebar.removeAttribute("aria-hidden");
+    sidebar.inert = false;
+    closeMobileMenu(false);
+  }
+}
+
+function openMobileMenu(){
+  sidebar.classList.add("open");
+  sidebar.removeAttribute("aria-hidden");
+  sidebar.inert = false;
+  navBackdrop.hidden = false;
+  navBackdrop.classList.add("open");
+  menuToggle.setAttribute("aria-expanded", "true");
+  menuToggle.setAttribute("aria-label", "Close menu");
+  document.addEventListener("keydown", onMenuKeydown);
+  const first = $(FOCUSABLE, sidebar);
+  if(first) first.focus();
+}
+
+function closeMobileMenu(returnFocus = true){
+  sidebar.classList.remove("open");
+  navBackdrop.hidden = true;
+  navBackdrop.classList.remove("open");
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.setAttribute("aria-label", "Open menu");
+  document.removeEventListener("keydown", onMenuKeydown);
+  if(mobileQuery.matches){
+    sidebar.setAttribute("aria-hidden", "true");
+    sidebar.inert = true;
+  }
+  if(returnFocus) menuToggle.focus();
+}
+
+function onMenuKeydown(e){
+  if(e.key === "Escape"){
+    e.preventDefault();
+    closeMobileMenu();
+    return;
+  }
+  if(e.key === "Tab"){
+    const focusables = $$(FOCUSABLE, sidebar);
+    if(!focusables.length) return;
+    const first = focusables[0], last = focusables[focusables.length - 1];
+    if(e.shiftKey && document.activeElement === first){
+      e.preventDefault(); last.focus();
+    }else if(!e.shiftKey && document.activeElement === last){
+      e.preventDefault(); first.focus();
+    }
+  }
+}
+
+menuToggle.addEventListener("click", () => {
+  if(sidebar.classList.contains("open")) closeMobileMenu();
+  else openMobileMenu();
+});
+navBackdrop.addEventListener("click", () => closeMobileMenu());
+mobileQuery.addEventListener("change", syncSidebarForViewport);
+syncSidebarForViewport();
 
 $("#sidebarNewPost").addEventListener("click", () => {
   routeTo("home");
@@ -64,8 +137,8 @@ $("#dockPrev").addEventListener("click", () => setTrack(state.currentTrack - 1, 
 $("#dockNext").addEventListener("click", () => setTrack(state.currentTrack + 1, true));
 $("#radioPrev").addEventListener("click", () => setTrack(state.currentTrack - 1, true));
 $("#radioNext").addEventListener("click", () => setTrack(state.currentTrack + 1, true));
-audio.addEventListener("play", () => playButtons.forEach(b => b.textContent = "❚❚"));
-audio.addEventListener("pause", () => playButtons.forEach(b => b.textContent = "▶"));
+audio.addEventListener("play", () => playButtons.forEach(b => { b.textContent = "❚❚"; b.setAttribute("aria-label", "Pause"); }));
+audio.addEventListener("pause", () => playButtons.forEach(b => { b.textContent = "▶"; b.setAttribute("aria-label", "Play"); }));
 audio.addEventListener("ended", () => setTrack(state.currentTrack + 1, true));
 audio.addEventListener("loadedmetadata", () => $("#duration").textContent = formatTime(audio.duration));
 audio.addEventListener("timeupdate", () => {
@@ -127,7 +200,18 @@ function handleUpload(file, type){
     state.pendingUpload = {type, src:reader.result, name:file.name};
     const preview = $("#uploadPreview");
     preview.hidden = false;
-    preview.textContent = `${type === "image" ? "Photo" : "Audio"} ready: ${file.name}`;
+    const fieldLabel = type === "image" ? "Alt text (describe this photo)" : "Caption / transcript";
+    const fieldId = type === "image" ? "uploadAltText" : "uploadCaption";
+    preview.innerHTML = `
+      <p>${type === "image" ? "Photo" : "Audio"} ready: ${escapeHtml(file.name)}</p>
+      <label for="${fieldId}">${fieldLabel}</label>
+      <input type="text" id="${fieldId}" placeholder="${type === "image" ? "A short description for screen readers" : "What is said or sung in this clip"}" />
+    `;
+    $(`#${fieldId}`, preview).addEventListener("input", e => {
+      if(!state.pendingUpload) return;
+      if(type === "image") state.pendingUpload.altText = e.target.value;
+      else state.pendingUpload.caption = e.target.value;
+    });
   };
   reader.readAsDataURL(file);
 }
@@ -177,15 +261,22 @@ function buildPost(post){
   $(".post-user strong",node).textContent = post.user;
   $(".post-user span",node).textContent = post.time || "now";
   $(".post-copy",node).textContent = post.text || "";
-  $(".like-btn span",node).textContent = post.likes || 0;
-  $(".comment-toggle span",node).textContent = (post.comments || []).length;
+  const likeBtn = $(".like-btn",node);
+  likeBtn.querySelector("span").textContent = post.likes || 0;
+  likeBtn.setAttribute("aria-label", `Like, ${post.likes || 0} likes`);
+  const commentBtn = $(".comment-toggle",node);
+  commentBtn.querySelector("span").textContent = (post.comments || []).length;
+  commentBtn.setAttribute("aria-label", `Show comments, ${(post.comments || []).length} comments`);
 
   const media = $(".post-media",node);
   const type = post.type || (post.media ? "image" : null);
   if(type === "image" && (post.media || post.src)){
-    const img = document.createElement("img"); img.src = post.media || post.src; img.alt = "User post"; media.appendChild(img);
+    const img = document.createElement("img"); img.src = post.media || post.src; img.alt = post.altText || "User post"; media.appendChild(img);
   }else if(type === "audio" && post.src){
     const player = document.createElement("audio"); player.controls = true; player.src = post.src; media.appendChild(player);
+    if(post.caption){
+      const caption = document.createElement("p"); caption.className = "post-caption"; caption.textContent = post.caption; media.appendChild(caption);
+    }
   }else if(type === "track" && post.trackId){
     const idx = DATA.tracks.findIndex(t => t.id === post.trackId);
     const t = DATA.tracks[idx < 0 ? 0 : idx];
@@ -193,11 +284,12 @@ function buildPost(post){
     $(".inline-track-play",media).addEventListener("click", () => setTrack(idx < 0 ? 0 : idx, true));
   }
 
-  $(".like-btn",node).addEventListener("click", () => {
+  likeBtn.addEventListener("click", () => {
     post.likes = (post.likes || 0) + 1; savePosts(); renderFeed($("#searchInput").value);
   });
-  $(".comment-toggle",node).addEventListener("click", () => {
+  commentBtn.addEventListener("click", () => {
     const c = $(".comments",node); c.hidden = !c.hidden;
+    commentBtn.setAttribute("aria-expanded", String(!c.hidden));
   });
   const list = $(".comment-list",node);
   (post.comments || []).forEach(c => {
@@ -217,3 +309,9 @@ function escapeHtml(v=""){
 }
 
 renderMusic(); renderMerch(); renderFeed(); setTrack(0);
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(err => console.warn("Service worker registration failed.", err));
+  });
+}

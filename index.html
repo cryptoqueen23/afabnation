@@ -6,14 +6,22 @@
   <meta name="theme-color" content="#0b0b0f" />
   <title>AFAB Nation</title>
   <meta name="description" content="AFAB Nation — radio, music, community and merch." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="assets/icons/favicon-16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="AFAB Nation" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="nav-backdrop" id="navBackdrop" hidden></div>
   <div class="app-shell">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <a class="brand" href="#" data-route="home" aria-label="AFAB Nation home">
         <img class="brand-logo" src="assets/afab-logo.png" alt="AFAB — A Female Assigned at Birth" />
         <span class="brand-tagline">Women. Real. Together.</span>
@@ -44,6 +52,7 @@
 
     <main class="main">
       <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="sidebar" aria-label="Open menu">☰</button>
         <div class="mobile-brand">
           <img src="assets/afab-logo.png" alt="AFAB Nation" />
         </div>
@@ -55,18 +64,19 @@
           <button class="top-link" data-route="community">Community</button>
         </nav>
         <label class="search-box">
-          <span>⌕</span>
-          <input id="searchInput" type="search" placeholder="Search AFAB Nation..." />
+          <span aria-hidden="true">⌕</span>
+          <input id="searchInput" type="search" placeholder="Search AFAB Nation..." aria-label="Search AFAB Nation" />
         </label>
       </header>
 
       <section class="page active" id="page-home">
+        <h1 class="visually-hidden">Home feed</h1>
         <div class="content-grid">
           <div class="feed-column">
             <section class="composer-card" id="composer">
               <div class="composer-head">
-                <div class="avatar avatar-mari">M</div>
-                <textarea id="postText" rows="2" placeholder="What's on your mind?"></textarea>
+                <div class="avatar avatar-mari" aria-hidden="true">M</div>
+                <textarea id="postText" rows="2" placeholder="What's on your mind?" aria-label="What's on your mind?"></textarea>
               </div>
               <div class="composer-actions">
                 <label class="upload-action">
@@ -93,7 +103,7 @@
             <section class="rail-card welcome-card">
               <h2>Welcome back, Mari!</h2>
               <div class="profile-summary">
-                <div class="avatar avatar-large avatar-mari">M</div>
+                <div class="avatar avatar-large avatar-mari" aria-hidden="true">M</div>
                 <div><strong id="postCount">0</strong><span>Posts</span></div>
                 <div><strong>0</strong><span>Followers</span></div>
                 <div><strong>0</strong><span>Following</span></div>
@@ -215,9 +225,9 @@
       </div>
     </div>
     <div class="dock-controls">
-      <button id="dockPrev">⏮</button>
-      <button id="dockPlay" class="dock-play">▶</button>
-      <button id="dockNext">⏭</button>
+      <button id="dockPrev" aria-label="Previous song">⏮</button>
+      <button id="dockPlay" class="dock-play" aria-label="Play">▶</button>
+      <button id="dockNext" aria-label="Next song">⏭</button>
     </div>
     <div class="dock-progress-wrap">
       <span id="currentTime">0:00</span>
@@ -232,22 +242,22 @@
   <template id="postTemplate">
     <article class="post-card">
       <div class="post-head">
-        <div class="avatar">A</div>
+        <div class="avatar" aria-hidden="true">A</div>
         <div class="post-user"><strong></strong><span></span></div>
-        <button class="post-menu">•••</button>
+        <button class="post-menu" aria-label="Post options">•••</button>
       </div>
       <p class="post-copy"></p>
       <div class="post-media"></div>
       <div class="post-actions">
-        <button class="like-btn">♥ <span>0</span></button>
-        <button class="comment-toggle">○ <span>0</span></button>
-        <button>↻</button>
-        <button class="save-btn">♡</button>
+        <button class="like-btn" aria-label="Like, 0 likes">♥ <span aria-hidden="true">0</span></button>
+        <button class="comment-toggle" aria-expanded="false" aria-label="Show comments, 0 comments">○ <span aria-hidden="true">0</span></button>
+        <button aria-label="Repost">↻</button>
+        <button class="save-btn" aria-label="Save post">♡</button>
       </div>
       <div class="comments" hidden>
         <div class="comment-list"></div>
         <div class="comment-compose">
-          <input type="text" placeholder="Write a comment..." />
+          <input type="text" placeholder="Write a comment..." aria-label="Write a comment" />
           <button type="button">Post</button>
         </div>
       </div>
