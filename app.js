@@ -1,6 +1,7 @@
 const DATA = window.AFAB_DATA;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const PLAYABLE = DATA.tracks.filter(t => t.src);
 
 const state = {
   currentTrack: 0,
@@ -108,11 +109,11 @@ $("#sidebarNewPost").addEventListener("click", () => {
 });
 
 function getTrack(){
-  return DATA.tracks[state.currentTrack];
+  return PLAYABLE[state.currentTrack];
 }
 
 function setTrack(index, autoplay=false){
-  state.currentTrack = (index + DATA.tracks.length) % DATA.tracks.length;
+  state.currentTrack = (index + PLAYABLE.length) % PLAYABLE.length;
   const t = getTrack();
   audio.src = t.src;
   $("#radioTitle").textContent = t.title;
@@ -122,6 +123,7 @@ function setTrack(index, autoplay=false){
   $("#radioCover").textContent = t.coverText;
   $("#dockCover").textContent = t.coverText.replace(/\n/g," ");
   updateRecentlyPlayed();
+  updateRadioTranscript(t);
   if(autoplay){
     audio.play().catch(() => {});
   }
@@ -154,13 +156,46 @@ function formatTime(sec){
   return `${m}:${String(s).padStart(2,"0")}`;
 }
 
-function mediaCard(track, index){
+function transcriptControl(track){
+  const panelId = `transcript-${track.id}`;
+  if(track.transcriptStatus === "complete" && track.transcript){
+    const safe = escapeHtml(track.transcript).replace(/\n/g,"<br>");
+    return `<button class="transcript-toggle" type="button" aria-expanded="false" aria-controls="${panelId}">Lyrics / Transcript</button>
+      <div class="transcript-panel" id="${panelId}" hidden>${safe}</div>`;
+  }
+  return `<button class="transcript-toggle pending" type="button" disabled>Transcript coming soon</button>`;
+}
+
+function wireTranscriptToggles(root){
+  $$(".transcript-toggle:not(.pending)", root).forEach(btn => {
+    btn.addEventListener("click", () => {
+      const panel = document.getElementById(btn.getAttribute("aria-controls"));
+      const isOpen = btn.getAttribute("aria-expanded") === "true";
+      btn.setAttribute("aria-expanded", String(!isOpen));
+      if(panel) panel.hidden = isOpen;
+    });
+  });
+}
+
+function updateRadioTranscript(track){
+  const container = $("#radioTranscript");
+  if(!container) return;
+  container.innerHTML = transcriptControl(track);
+  wireTranscriptToggles(container);
+}
+
+function mediaCard(track){
+  const playableIndex = PLAYABLE.findIndex(t => t.id === track.id);
+  const playControl = playableIndex > -1
+    ? `<button data-track="${playableIndex}">▶ Play</button>`
+    : `<button disabled aria-label="Audio coming soon">Audio coming soon</button>`;
   return `<article class="media-card">
     <div class="cover">${track.coverText.replace(/\n/g,"<br>")}</div>
     <div class="media-card-body">
       <h3>${escapeHtml(track.title)}</h3>
       <p>${escapeHtml(track.artist)}</p>
-      <button data-track="${index}">▶ Play</button>
+      ${playControl}
+      <div class="track-transcript">${transcriptControl(track)}</div>
     </div>
   </article>`;
 }
@@ -170,11 +205,13 @@ function renderMusic(){
   $$("#musicGrid [data-track]").forEach(btn => btn.addEventListener("click", () => {
     setTrack(Number(btn.dataset.track), true); routeTo("radio");
   }));
+  wireTranscriptToggles($("#musicGrid"));
 }
 function updateRecentlyPlayed(){
-  const indexes = DATA.tracks.map((_,i) => (state.currentTrack - i + DATA.tracks.length) % DATA.tracks.length).slice(0,4);
-  $("#recentlyPlayed").innerHTML = indexes.map(i => mediaCard(DATA.tracks[i], i)).join("");
+  const indexes = PLAYABLE.map((_,i) => (state.currentTrack - i + PLAYABLE.length) % PLAYABLE.length).slice(0,4);
+  $("#recentlyPlayed").innerHTML = indexes.map(i => mediaCard(PLAYABLE[i])).join("");
   $$("#recentlyPlayed [data-track]").forEach(btn => btn.addEventListener("click", () => setTrack(Number(btn.dataset.track), true)));
+  wireTranscriptToggles($("#recentlyPlayed"));
 }
 
 function renderMerch(){
@@ -278,8 +315,8 @@ function buildPost(post){
       const caption = document.createElement("p"); caption.className = "post-caption"; caption.textContent = post.caption; media.appendChild(caption);
     }
   }else if(type === "track" && post.trackId){
-    const idx = DATA.tracks.findIndex(t => t.id === post.trackId);
-    const t = DATA.tracks[idx < 0 ? 0 : idx];
+    const idx = PLAYABLE.findIndex(t => t.id === post.trackId);
+    const t = DATA.tracks.find(t => t.id === post.trackId) || PLAYABLE[0];
     media.innerHTML = `<div class="media-card" style="margin-top:8px"><div class="media-card-body"><h3>${escapeHtml(t.title)}</h3><p>${escapeHtml(t.artist)}</p><button class="inline-track-play">▶ Play on AFAB Nation Radio</button></div></div>`;
     $(".inline-track-play",media).addEventListener("click", () => setTrack(idx < 0 ? 0 : idx, true));
   }

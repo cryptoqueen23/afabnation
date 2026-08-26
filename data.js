@@ -6,7 +6,9 @@ window.AFAB_DATA = {
             "artist": "Mari Cruz",
             "coverText": "CLAMS",
             "src": "audio/clams-not-pronouns.mp3",
-            "duration": "4:43"
+            "duration": "4:43",
+            "transcript": "",
+            "transcriptStatus": "pending"
       },
       {
             "id": "xx-is-not-a-feeling",
@@ -14,7 +16,9 @@ window.AFAB_DATA = {
             "artist": "Mari Cruz",
             "coverText": "XX",
             "src": "audio/xx-is-not-a-feeling.mp3",
-            "duration": "4:00"
+            "duration": "4:00",
+            "transcript": "",
+            "transcriptStatus": "pending"
       },
       {
             "id": "real-females-dont-disappear",
@@ -22,7 +26,33 @@ window.AFAB_DATA = {
             "artist": "Mari Cruz",
             "coverText": "REAL\nFEMALES",
             "src": "audio/real-females-dont-disappear.mp3",
-            "duration": "2:04"
+            "duration": "2:04",
+            "transcript": "",
+            "transcriptStatus": "pending"
+      },
+      {
+            "id": "keep-your-male-privilege-out-of-womens-spaces",
+            "title": "Keep Your Male Privilege Out of Women's Spaces",
+            "artist": "Mari Cruz",
+            "coverText": "KEEP\nOUT",
+            "transcript": "",
+            "transcriptStatus": "pending"
+      },
+      {
+            "id": "1st-edition",
+            "title": "1st Edition",
+            "artist": "Mari Cruz",
+            "coverText": "1ST\nEDITION",
+            "transcript": "",
+            "transcriptStatus": "pending"
+      },
+      {
+            "id": "wrong-door-amigo",
+            "title": "Wrong Door, Amigo",
+            "artist": "Mari Cruz",
+            "coverText": "WRONG\nDOOR",
+            "transcript": "",
+            "transcriptStatus": "pending"
       }
 ],
   merch: [
