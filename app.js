@@ -197,7 +197,7 @@ function transcriptControl(track){
     return `<button class="transcript-toggle" type="button" aria-expanded="false" aria-controls="${panelId}">Lyrics / Transcript</button>
       <div class="transcript-panel" id="${panelId}" hidden>${safe}</div>`;
   }
-  return `<button class="transcript-toggle pending" type="button" disabled>Transcript coming soon</button>`;
+  return "";
 }
 
 function wireTranscriptToggles(root){
@@ -222,7 +222,29 @@ function trackBadges(track){
   const badges = [];
   if(track.featured) badges.push(`<span class="track-badge featured"><span aria-hidden="true">★</span> Featured</span>`);
   if(track.explicit) badges.push(`<span class="track-badge explicit">Explicit</span>`);
+  if(track.access === "premium") badges.push(`<span class="track-badge premium">Premium · $${Number(track.price || 0).toFixed(2)}</span>`);
   return badges.length ? `<div class="track-badges">${badges.join("")}</div>` : "";
+}
+
+const trackLikes = JSON.parse(localStorage.getItem("afab_track_likes") || "null") || {};
+function saveTrackLikes(){
+  try{ localStorage.setItem("afab_track_likes", JSON.stringify(trackLikes)); }
+  catch(err){ console.warn("Song like could not be saved locally.", err); }
+}
+function trackLikeButton(track){
+  const count = trackLikes[track.id] || 0;
+  return `<button class="track-like-btn" type="button" data-like-track="${track.id}" aria-label="Like ${escapeHtml(track.title)}, ${count} likes">♥ <span aria-hidden="true">${count}</span></button>`;
+}
+function wireTrackLikeButtons(root){
+  $$("[data-like-track]", root).forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.likeTrack;
+      trackLikes[id] = (trackLikes[id] || 0) + 1;
+      saveTrackLikes();
+      btn.querySelector("span").textContent = trackLikes[id];
+      btn.setAttribute("aria-label", `Like ${btn.closest(".media-card").querySelector("h3").textContent}, ${trackLikes[id]} likes`);
+    });
+  });
 }
 
 function trackMeta(track){
@@ -235,9 +257,16 @@ function trackMeta(track){
 
 function mediaCard(track){
   const playableIndex = PLAYABLE.findIndex(t => t.id === track.id);
-  const playControl = playableIndex > -1
-    ? `<button data-track="${playableIndex}">▶ Play</button>`
-    : `<button disabled aria-label="Audio coming soon">Audio coming soon</button>`;
+  const isLocked = track.access === "premium";
+  let playControl;
+  if(isLocked){
+    playControl = `<button class="unlock-track-btn" data-unlock-track="${track.id}">Unlock Song — $${Number(track.price || 0).toFixed(2)}</button>`;
+  }else if(playableIndex > -1){
+    playControl = `<button data-track="${playableIndex}">▶ Play</button>`;
+  }else{
+    playControl = `<button disabled aria-label="Audio not uploaded yet">Audio not uploaded yet</button>`;
+  }
+  const transcript = transcriptControl(track);
   return `<article class="media-card">
     <div class="cover${track.cover ? " has-image" : ""}">${coverMarkup(track, true)}</div>
     <div class="media-card-body">
@@ -247,9 +276,18 @@ function mediaCard(track){
       ${trackMeta(track)}
       ${track.description ? `<p class="track-description">${escapeHtml(track.description)}</p>` : ""}
       ${playControl}
-      <div class="track-transcript">${transcriptControl(track)}</div>
+      ${transcript ? `<div class="track-transcript">${transcript}</div>` : ""}
+      <div class="track-actions">${trackLikeButton(track)}</div>
     </div>
   </article>`;
+}
+
+function wireMediaCardControls(root){
+  wireTranscriptToggles(root);
+  wireTrackLikeButtons(root);
+  $$("[data-unlock-track]", root).forEach(btn => btn.addEventListener("click", () => {
+    alert("Song purchases aren't set up yet — this song will unlock here once payments are live.");
+  }));
 }
 
 function renderMusic(){
@@ -257,13 +295,13 @@ function renderMusic(){
   $$("#musicGrid [data-track]").forEach(btn => btn.addEventListener("click", () => {
     setTrack(Number(btn.dataset.track), true); routeTo("radio");
   }));
-  wireTranscriptToggles($("#musicGrid"));
+  wireMediaCardControls($("#musicGrid"));
 }
 function updateRecentlyPlayed(){
   const indexes = PLAYABLE.map((_,i) => (state.currentTrack - i + PLAYABLE.length) % PLAYABLE.length).slice(0,4);
   $("#recentlyPlayed").innerHTML = indexes.map(i => mediaCard(PLAYABLE[i])).join("");
   $$("#recentlyPlayed [data-track]").forEach(btn => btn.addEventListener("click", () => setTrack(Number(btn.dataset.track), true)));
-  wireTranscriptToggles($("#recentlyPlayed"));
+  wireMediaCardControls($("#recentlyPlayed"));
 }
 
 function renderMerch(){
@@ -272,13 +310,20 @@ function renderMerch(){
     <div class="media-card-body"><h3>${escapeHtml(m.name)}</h3><p class="price">${m.price}</p></div>
   </article>`).join("");
 }
+function renderSponsor(){
+  const s = DATA.sponsors[state.sponsor];
+  $("#sponsorName").innerHTML = s.url
+    ? `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener">${escapeHtml(s.name)}</a>`
+    : escapeHtml(s.name);
+  $("#sponsorText").textContent = s.text;
+}
 function rotateSponsor(){
   state.sponsor = (state.sponsor + 1) % DATA.sponsors.length;
-  const s = DATA.sponsors[state.sponsor];
-  $("#sponsorName").textContent = s.name; $("#sponsorText").textContent = s.text;
+  renderSponsor();
 }
 $("#nextSponsor").addEventListener("click", rotateSponsor);
 setInterval(rotateSponsor, 12000);
+renderSponsor();
 
 $("#imageUpload").addEventListener("change", e => handleUpload(e.target.files[0], "image"));
 $("#audioUpload").addEventListener("change", e => handleUpload(e.target.files[0], "audio"));
@@ -338,10 +383,12 @@ function savePosts(){
 }
 
 function renderFeed(filter=""){
-  const feed = $("#feed");
-  feed.innerHTML = "";
+  const containers = [$("#feed"), $("#feedCommunity")].filter(Boolean);
   const list = state.posts.filter(p => `${p.user} ${p.text}`.toLowerCase().includes(filter.toLowerCase()));
-  list.forEach(post => feed.appendChild(buildPost(post)));
+  containers.forEach(container => {
+    container.innerHTML = "";
+    list.forEach(post => container.appendChild(buildPost(post)));
+  });
   $("#postCount").textContent = state.posts.length;
 }
 function buildPost(post){

@@ -18,6 +18,8 @@
 //   description   one-line blurb shown on the card -- optional
 //   explicit      true/false, shows an "Explicit" badge
 //   featured      true/false, shows a "Featured" badge
+//   access        "free" or "premium" -- controls FREE/PREMIUM badge and Unlock UI
+//   price         price in USD, used when access is "premium" (e.g. 1.99)
 //   published     false hides the track from the site entirely (default true)
 //   transcript        full lyrics/transcript text, or "" if not written yet
 //   transcriptStatus  "pending" or "complete" -- controls the transcript UI copy
@@ -35,6 +37,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -51,6 +55,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -67,6 +73,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -83,6 +91,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -99,6 +109,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -115,6 +127,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -131,6 +145,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -147,6 +163,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: true,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -163,6 +181,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: true,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -179,6 +199,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -195,6 +217,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -211,6 +235,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -227,6 +253,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -243,6 +271,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -259,6 +289,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -275,6 +307,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -291,6 +325,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -307,6 +343,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -323,6 +361,8 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"
@@ -339,6 +379,80 @@ window.AFAB_CATALOG = [
     description: "",
     explicit: false,
     featured: false,
+    access: "free",
+    price: 0,
+    published: true,
+    transcript: "",
+    transcriptStatus: "pending"
+  },
+  {
+    id: "dont-stop-meow",
+    title: "Don't Stop Meow",
+    artist: "Mari Cruz",
+    audio: "audio/dont-stop-meow.mp3",
+    cover: "",
+    coverText: "DON'T\nSTOP",
+    genre: [],
+    releaseDate: "",
+    description: "",
+    explicit: false,
+    featured: false,
+    access: "free",
+    price: 0,
+    published: true,
+    transcript: "",
+    transcriptStatus: "pending"
+  },
+  {
+    id: "thats-not-how-this-works",
+    title: "That's Not How This Works",
+    artist: "Mari Cruz",
+    audio: "audio/thats-not-how-this-works.mp3",
+    cover: "",
+    coverText: "NOT HOW\nTHIS WORKS",
+    genre: [],
+    releaseDate: "",
+    description: "",
+    explicit: false,
+    featured: false,
+    access: "free",
+    price: 0,
+    published: true,
+    transcript: "",
+    transcriptStatus: "pending"
+  },
+  {
+    id: "whats-balls-got-to-do-with-it",
+    title: "What's Balls Got to Do With It?",
+    artist: "Mari Cruz",
+    audio: "audio/whats-balls-got-to-do-with-it.mp3",
+    cover: "",
+    coverText: "WHAT'S\nBALLS",
+    genre: [],
+    releaseDate: "",
+    description: "",
+    explicit: false,
+    featured: false,
+    access: "free",
+    price: 0,
+    published: true,
+    transcript: "",
+    transcriptStatus: "pending"
+  },
+  {
+    id: "is-this-biology",
+    title: "Is This Biology?",
+    artist: "Mari Cruz",
+    audio: "audio/is-this-biology.mp3",
+    cover: "",
+    coverText: "IS THIS\nBIOLOGY",
+    genre: [],
+    releaseDate: "",
+    description: "",
+    explicit: false,
+    featured: false,
+    access: "free",
+    price: 0,
     published: true,
     transcript: "",
     transcriptStatus: "pending"

@@ -5,10 +5,14 @@ window.AFAB_DATA = {
     { name: "XX Mug", price: "$16.99", art: "XX" },
     { name: "AFAB Nation Hat", price: "$22.99", art: "AFAB" }
   ],
+  // Sponsor rotation is data-driven so paying advertisers can be added as plain
+  // entries here. house:true marks fallback inventory (like Phoenix Securitas
+  // Tech) that fills the rotation when there's no paid sponsor for that slot --
+  // it isn't given special code paths, just this flag for future logic.
   sponsors: [
-    { name: "Phoenix Securitas Tech", text: "Independent technology and media support." },
-    { name: "Your Business Here", text: "Bootstrap sponsor inventory ready to sell." },
-    { name: "AFAB Nation Merch", text: "Support the station. Wear it loud." }
+    { name: "AFAB Nation Merch", text: "Support the station. Wear it loud." },
+    { name: "Your Business Here", text: "Sponsor inventory ready to sell." },
+    { name: "Phoenix Securitas Tech", text: "The Texas tech studio behind AFAB Nation.", url: "https://tree.phoenixsecuritas.com", house: true }
   ],
   starterPosts: [
     {
